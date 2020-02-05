@@ -1,27 +1,26 @@
-"""
-@File        : 104_maximum_depth_tree.py
-@Description : Leetcode第104题二叉树的最大深度
-给定一个二叉树，找出其最大深度。
-
- 二叉树的深度为根节点到最远叶子节点的最长路径上的节点数。
-
- 说明: 叶子节点是指没有子节点的节点。
-
- 示例：
-给定二叉树 [3,9,20,null,null,15,7]，
-
-     3
-   / \
-  9  20
-    /  \
-   15   7
-
- 返回它的最大深度 3 。
- Related Topics 树 深度优先搜索
-@author      : sheng
-@date time   : 2020/2/5 0:08
-@version     : v1.0
-"""
+# 给定一个二叉树，返回其节点值自底向上的层次遍历。 （即按从叶子节点所在层到根节点所在的层，逐层从左向右遍历）
+#
+#  例如：
+# 给定二叉树 [3,9,20,null,null,15,7],
+#
+#      3
+#    / \
+#   9  20
+#     /  \
+#    15   7
+#
+#
+#  返回其自底向上的层次遍历为：
+#
+#  [
+#   [15,7],
+#   [9,20],
+#   [3]
+# ]
+#
+#  Related Topics 树 广度优先搜索
+# leetcode submit region begin(Prohibit modification and deletion)
+# Definition for a binary tree node.
 
 
 class TreeNode:
@@ -33,30 +32,49 @@ class TreeNode:
 
 class Solution:
     """
-    通过迭代的方式，通过深度优先遍历来获取，
-    可以通过栈的方式，把根节点载入进栈，
-    一次取出一个节点，当取出的那个节点不为空，则
-    开始进行迭代，只要还有叶子节点存在就可以一直深度遍历
-    然后通过max函数比较当前深度与记录的深度谁最大取谁
+    通过DFS（深度优先遍历），先找到最深的那一层，然后层层添加进一个新的列表
+    每一层的元素都在一个列表当中，然后添加进要返回的列表当中，然后使得列表倒序即可
     """
-    def maxDepth(self, root: TreeNode) -> int:
+    def levelOrderBottom(self, root: TreeNode) -> List[List[int]]:
         if not root:
-            return 0
-        stack = [(1, root)]
-        depth = 0
+            return []
+        stack = [[root]]
+        stack_value = [[root.val]]
         while stack:
-            cur_depth, node = stack.pop()
-            if node:
-                stack.append((cur_depth + 1, node.left))
-                stack.append((cur_depth + 1, node.right))
-                depth = max(cur_depth, depth)
-        return depth
+            nodes = stack[-1]
+            cur_node = []
+            cur_values = []
+            for node in nodes:
+                if node:
+                    if node.left:
+                        cur_node.append(node.left)
+                        cur_values.append(node.left.val)
+                    if node.right:
+                        cur_node.append(node.right)
+                        cur_values.append(node.right.val)
+            if cur_node:
+                stack.append(cur_node)
+                stack_value.append(cur_values)
+            else:
+                break
+        return stack_value[::-1]
 
     """
-    通过递归的方式解决，
-    终止条件为当前节点为None
+    通过递归的方式解决
+    终止条件为遍历所有叶子节点为止
     """
-    def maxDepth_2(self, root: TreeNode) -> int:
-        if not root:
-            return 0
-        return max(self.maxDepth_2(root.left), self.maxDepth_2(root.right)) + 1
+    def levelOrderBottom_2(self, root: TreeNode) -> List[List[int]]:
+        list_tree = []
+        def recursive(root, depth):
+            if not root:
+                return
+            # 当list_tree为[]时，为里面的函数添加一层列表
+            if depth == len(list_tree):
+                list_tree.insert(0, [])
+            list_tree[-(depth + 1)].append(root.val)
+            recursive(root.left, depth + 1)
+            recursive(root.right, depth + 1)
+            return list_tree
+        return recursive(root, 0)
+
+# leetcode submit region end(Prohibit modification and deletion)
