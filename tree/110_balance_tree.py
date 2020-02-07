@@ -37,21 +37,21 @@
 
 # leetcode submit region begin(Prohibit modification and deletion)
 # Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, x):
-#         self.val = x
-#         self.left = None
-#         self.right = None
+class TreeNode:
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
 
 class Solution:
     def isBalanced(self, root: TreeNode) -> bool:
         if not root:
             return True
-        def recorsive(node, depth):
+        def recorsive(node):
             if node is None:
                 return 0
-            left_depth = recorsive(node.left, depth+1) + 1
-            right_depth = recorsive(node.right, depth+1) + 1
+            left_depth = recorsive(node.left) + 1
+            right_depth = recorsive(node.right) + 1
             return max(left_depth, right_depth)
         return abs(recorsive(root.left, 1) - recorsive(root.right, 1)) > 1 and\
             self.isBalanced(root.left) and self.isBalanced(root.right)
