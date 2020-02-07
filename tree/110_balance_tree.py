@@ -53,7 +53,7 @@ class Solution:
             left_depth = recorsive(node.left) + 1
             right_depth = recorsive(node.right) + 1
             return max(left_depth, right_depth)
-        return abs(recorsive(root.left, 1) - recorsive(root.right, 1)) > 1 and\
+        return abs(recorsive(root.left) - recorsive(root.right)) <= 1 and\
             self.isBalanced(root.left) and self.isBalanced(root.right)
 
 # leetcode submit region end(Prohibit modification and deletion)
