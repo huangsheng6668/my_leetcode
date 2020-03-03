@@ -46,7 +46,6 @@ class Solution:
                 stack.append((node.right, cur_sum - node.right.val))
         return False
 
-
     """
         利用递归来解决这题，通过判断是否是叶子节点和当前和是否被减成0，
         与根节点是不是个空节点为终止条件
